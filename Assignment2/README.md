@@ -1,5 +1,6 @@
 # E-Commerce Sales Data Analysis System
 
+
 A comprehensive Java application demonstrating advanced Stream API usage, functional programming paradigms, and data analysis capabilities on e-commerce sales data.
 
 ## Project Overview
@@ -15,6 +16,32 @@ This application analyzes e-commerce sales data using Java 11+ Stream operations
 - **Robust Validation**: Comprehensive input validation and error handling
 - **Test Coverage**: Unit tests demonstrating TDD principles
 - **CSV Processing**: Flexible CSV data loading with error recovery
+
+## Dataset and Assumptions
+
+The project uses `sales_data.csv`, a synthetic e-commerce dataset containing 120 rows. Each row represents a single order line item.
+
+### Columns
+- `orderId`: Unique identifier for the order
+- `productName`: Name of the product sold
+- `category`: Product category (Electronics, Apparel, Home & Kitchen, Sports, etc.)
+- `price`: Unit price of the product
+- `quantity`: Number of units sold
+- `orderDate`: Date of the transaction
+- `customerRegion`: Geographic region of the customer
+
+### Assumptions
+- **Currency**: All prices are in USD ($).
+- **Regions**: Limited to "North America", "Europe", and "Asia" to demonstrate regional aggregation.
+- **Granularity**: Each row is treated as a distinct line item; multiple rows could theoretically belong to the same order ID, but for this analysis, we treat them as individual records.
+
+### Suitability for Analysis
+This dataset is specifically designed to demonstrate:
+- **Category Revenue**: diverse categories with varying price points.
+- **Seasonal Trends**: distributed dates allowing for monthly/quarterly analysis.
+- **Regional Performance**: clear segmentation for geographic insights.
+- **Product Analysis**: sufficient variety to show top sellers and long-tail products.
+
 
 ## Architecture
 
@@ -53,7 +80,8 @@ Assign2/
 
 #### 2. Repository Layer
 - **Interface**: `SalesRepository` - Contract for data access
-- **Implementation**: `InMemorySalesRepository` - Thread-safe, stream-optimized
+- **Implementation**: `InMemorySalesRepository` - In-memory implementation
+  > **Note**: Thread-safety of `InMemorySalesRepository` is out of scope for this assignment.
 - **Query Methods**: Category, region, date range, price range filtering
 - **Swappable Design**: Easy to replace with database implementation
 
@@ -299,31 +327,43 @@ Successfully loaded 120 sales records
 
 ### Analysis Outputs
 
-#### Overall Summary
-```
+### Sample Output
+
+Below is a snippet captured from a real execution of `make run`:
+
+```text
+=== Data Overview ===
+Total Records: 120
+Product Categories: 6 (Accessories, Apparel, Beauty, Electronics, Home & Kitchen, Sports)
+Customer Regions: 3 (Asia, Europe, North America)
+Date Range: 2023-01-15 to 2023-12-10
+
+=== Overall Summary Statistics ===
 Total Orders: 120
-Total Revenue: $25,847.60
-Average Order Value: $215.40
+Total Revenue: $19,237.92
+Average Order Value: $160.32
 Unique Products: 120
 Product Categories: 6
 Customer Regions: 3
-```
 
-#### Revenue by Category
-```
-Category             Revenue    % of Total
-Electronics        $8,249.89        31.9%
-Apparel           $6,127.42        23.7%
-Home & Kitchen    $5,891.23        22.8%
-...
-```
+=== Revenue by Category ===
+Category                     Revenue % of Total
+--------------------------------------------------
+Electronics          $     5,378.55     28.0%
+Home & Kitchen       $     4,699.76     24.4%
+Sports               $     4,150.64     21.6%
+Apparel              $     2,709.47     14.1%
+Accessories          $     1,199.81      6.2%
+Beauty               $     1,099.69      5.7%
+--------------------------------------------------
+TOTAL                $    19,237.92    100.0%
 
-#### Regional Performance  
-```
-Region          Revenue   Orders  Avg Order  Top Category
-North America  $9,248.91      42   $220.21   Electronics
-Europe         $8,129.45      38   $213.93   Apparel
-Asia           $8,469.24      40   $211.73   Home & Kitchen
+=== Regional Performance Analysis ===
+Region                  Revenue   Orders    Avg Order Top Category   
+---------------------------------------------------------------------------
+North America   $    7,344.30      40 $   183.61 Electronics    
+Asia            $    6,408.24      40 $   160.21 Sports         
+Europe          $    5,485.38      40 $   137.13 Apparel        
 ```
 
 ## Customization
